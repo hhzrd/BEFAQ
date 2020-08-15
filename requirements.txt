@@ -1,0 +1,9 @@
+sentence_transformers==0.3.0
+jieba==0.39
+elasticsearch==7.7.0
+annoy==1.16.3
+xlrd==1.2.0
+numpy==1.18.2
+faiss_cpu==1.6.3
+sanic==20.6.3
+scikit_learn==0.23.2
