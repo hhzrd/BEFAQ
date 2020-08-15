@@ -3,7 +3,7 @@
 Author: xiaoyichao
 LastEditors: xiaoyichao
 Date: 2020-08-13 11:34:47
-LastEditTime: 2020-08-15 16:08:44
+LastEditTime: 2020-08-17 14:37:45
 Description: 用于读取excel表格的类
 '''
 import os

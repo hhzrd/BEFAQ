@@ -1,45 +1,81 @@
-(一)BEFAQ
-BEFAQ(BERT Embedding FAQ) 开源项目是好好住面向FAQ集合的问答系统框架
+# BEFAQ
 
-开发者可以使用BEFAQ系统快速构建和定制适用于特定业务场景的FAQ问答系统，并加速迭代和升级。
-BEFAQ的优点有：
-（1）使用了ES、Faiss、Annoy 作为召回引擎
-（2）使用了Sentence BERT向量
-（3）对同义问题有更好的支持
-（4）支持多领域语料（同样的问题，不同的用户角色，可以得到不同的答案）
+**BEFAQ(BERT Embedding FAQ)** 开源项目是好好住面向FAQ集合的问答系统框架。</br>
+<br>我们将Sentence BERT模型应用到FAQ问答系统中。开发者可以使用BEFAQ系统快速构建和定制适用于特定业务场景的FAQ问答系统。</br>
 
+## BEFAQ的优点有：
 
-(二)详细介绍
-1、安装ES7.6.1和配套的kibana，配置ES的IK分词器和同义词功能，请参考我的博客：https://blog.csdn.net/weixin_37792714/article/details/108025200
+<br>（1）使用了Elasticsearch、Faiss、Annoy 作为召回引擎</br>
+<br>（2）使用了Sentence BERT 语意向量（Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks）</br>
+<br>（3）对同义问题有很好的支持</br>
+<br>（4）支持多领域语料（保证了召回的语料是对应领域的，即使是同样的问题，也可以得到不同的答案。）</br>
 
 
-2、创建BEFAQ的虚拟环境
+## BEFAQ的框架结构如下图
+![image](https://github.com/hhzrd/BEFAQ/blob/master/image/BEFAQ%20%E6%A1%86%E6%9E%B6.png)
+
+
+## 如何使用
+
+### 1、安装Es7.6.1和配套的kibana，配置Es的IK分词器和同义词功能
+
+请参考博客[ES（Elasticsearch）7.6.1安装教程](https://blog.csdn.net/weixin_37792714/article/details/108025200)进行安装。如何已经配置过Es、IK分词器和同义词功能，可以略过这一步。但是记得把同义词同步到你的Es中。为了方便大家。相关文件的下载，都放在了百度网盘中，欢迎大家使用。链接:https://pan.baidu.com/s/1PxgINf6Q1UZBtcsYw6FU0w  密码:4q9h
+
+
+### 2、下载项目代码并创建BEFAQ的虚拟环境
+
     conda create -n befaq python=3.6 
     source activate befaq
-    <!-- 进入BEFAQ的根目录，然后 -->
+    git clone https://github.com/hhzrd/BEFAQ.git
+    进入BEFAQ的根目录，然后
     pip install -r requirements.txt
 
-3、sentence-transformers 多语言预训练模型的下载
+### 3、sentence-transformers 多语言预训练模型的下载
+
     首先进入到项目的根目录，然后
     cd data/model
     wget https://public.ukp.informatik.tu-darmstadt.de/reimers/sentence-transformers/v0.2/distiluse-base-multilingual-cased.zip
     unzip distiluse-base-multilingual-cased.zip
 
+### 4、excel数据格式
+    如果你想要先跑通代码尝试一下。可以先不配置自己的数据。
 
-4、如何开启BEFAQ服务
+    excel表格请放置在项目根目录下的 data/文件下，例如目前是示例文件名为“线上用户反馈回复.xlsx” excel数据是QA数据的来源，其中的数据会被写入到Es中。大家下载源码后，可以打开这个文件具体看一下数据示例。
+
+    sheet的名称表示不同的领域，比如，我的第一个领域，叫做“领域1”。其中，第一列是“数据填写人姓名”，可以为空。第二列是“答案”，不允许为空。第三列是“原始问题”，不允许为空。第三列以后是“同义问题”，同义问题的数量没有限制。可以有很多同义问题，也可以一个同义问题都没有。一行一条数据。
+
+    sheet名为“词典”的，放置的是用户词典。比如，我不想让“好好住”这个词在分词的过程中被切开。就把这个词放置在词典中。一行一条数据。程序会自动读取到指定位置。
+    sheet名为“停用词”的，放置的是停用词词典。一行一条数据。程序会自动读取到指定位置。
+    sheet名为“同义词”的，是放置同义词的sheet。第一列是原义词，第二列及其之后是同义词。比如，番茄和西红柿是同义词。第一行放番茄，第二行放西红柿。一行一条数据。同义词的数据需要自己写到Es的同义词表中，具体参看我上边提到ES（Elasticsearch）7.6.1安装教程的博客。因为你当下的服务器未必是Es的服务器，所以这里并没有用程序直接写入。
+
+    同义词，词典，停用词。多个领域共用。词典，停用词是给BEFAQ的jieba分词使用的。同义词是给Es使用的。
+
+    你可以在Excel中写上很多领域的数据，但是具体读取哪些领域的数据，项目根目录下的sheetname.conf中可以配置。
+
+
+
+### 5、如何开启BEFAQ服务
+
     进入项目的根目录，然后
     cd es
-    <!-- 将数据从excel 写到ES -->
+
+    将数据从excel 写到ES
     python write_data2es.py
-    <!-- 将问题处理成Sentence BERT 向量，保存到bin类型文件中，便于后期读取问题的向量。 -->
+
+    将问题处理成Sentence BERT 向量，保存到bin类型文件中，便于后期读取问题的向量。
     python write_vecs2bin.py
-    <!-- 训练Faiss和Annoy模型 -->
+
+    训练Faiss和Annoy模型
     python train_search_model.py
+
     进入项目的根目录(cd  ..)，然后
-    <!-- 启动BEFAQ服务 （如果数据没有发生变化，后期启动服务只需要进行这一步） -->
     cd faq
+
+    启动BEFAQ服务 （如果数据没有发生变化，后期启动服务只需要进行这一步）
     python main_faq.py 
-    <!-- 在终端中测试BEFAQ。BEFAQ的服务是post请求。(将xxx.xx.xx.xx替换成自己的ip) -->
+
+    在终端中测试BEFAQ。BEFAQ的服务是post请求。(将xxx.xx.xx.xx替换成自己的ip)
+    
     curl -d "question=忘记原始密码怎么修改密码&get_num=3&threshold=0.5&owner_name=领域1"   http://xxx.xx.xx.xx:8129/BEFAQ
     
     接口url:
@@ -48,7 +84,7 @@ BEFAQ的优点有：
     question：用户的问题。必需
     get_num：接口最多返回几条数据。非必需，默认为3
     threshold：阈值，相似度高于这个阈值的数据才会被接口返回。非必需，默认为0.5
-    owner_name：数据所有者的名称，用来区分多领域数据。必需
+    owner_name：数据所有者的名称，也就是excel中每个领域的数据对应的sheet name。用来区分多领域数据。必需
     
     返回的数据格式：
     [
@@ -62,21 +98,23 @@ BEFAQ的优点有：
     ]
 
 
-5、BEFAQ的配置文件
-    es/stopwords4_process_question_dedup.txt 是BEFAQ的停用词表。
-    es/userdict.txt  是BEFAQ的用户字典表。
-    es/es.ini 是BEFAQ关于ES的配置文件。
-    faq/befaq_conf.ini 是BEFAQ的配置文件。
+### 6、BEFAQ的配置文件
+
+    项目根目录下的data/线上用户反馈回复.xlsx 是QA数据的来源，其中的数据会被写入到Es中。
+    项目根目录下的sheetname.conf 是读取Excel文档数据的配置文件。
+    项目根目录下的es/es.ini 是BEFAQ关于ES的配置文件。
+    项目根目录下的faq/befaq_conf.ini 是BEFAQ的配置文件。
 
 
-6、如何开启BEFAQ 的联想词接口服务
-    如何想要启动根据当前输入联想问题的功能，支持多进程。
+### 7、如何开启BEFAQ 的联想词接口服务
+
+    如果想要启动根据当前输入联想问题的功能。
     进入项目根目录，然后
     cd es
     python associative_questions_server.py
 
     在终端中测试联想功能。服务是post请求。(将xxx.xx.xx.xx替换成自己的ip)
-    curl -d "current_question=设计师&limit_num=3&owner_name=领域1&if_middle=1"   http://xxx.xx.xx.xx:8128/associative_questions
+    curl -d "current_question=设计师&limit_num=3&owner_name=领域1&if_middle=1"  http://xxx.xx.xx.xx:8128/associative_questions
     
     接口url:
     http://xxx.xx.xx.xx:8128/associative_questions
@@ -85,7 +123,6 @@ BEFAQ的优点有：
     limit_num：接口最多返回几条数据。必需
     owner_name：数据所有者的名称，用来区分多领域数据。必需
     if_middle:是否允许用户当前输入的内容在中间的位置。非必需。默认为1，1为允许，0为不允许。
-
 
     返回的数据格式：
     {
@@ -100,17 +137,21 @@ BEFAQ的优点有：
         }
     }
 
-Authors
+## Authors
 
-该项目的主要贡献者是:
-    肖轶超（好好住）
-    徐忠杰（好好住）
-    王得祥（好好住）
-    向泳州（好好住）
-    辛少普（好好住）
+<br>该项目的主要贡献者有:</br>
+* [肖轶超](https://github.com/xiaoyichao)（好好住）
+* [徐忠杰](https://github.com/461025412)（好好住）
+* [王得祥](https://github.com/oksite)（好好住）
+* [向泳州](https://github.com/XiangYongzhou)（好好住）
+* [辛少普](https://github.com/hhzrd)（好好住）
 
-参考文献：
-    百度AnyQ  https://github.com/baidu/AnyQ
+## 参考文献：
 
-Copyright and License
-BEFAQ is provided under the Apache-2.0 license.
+<br>[1][百度AnyQ](https://github.com/baidu/AnyQ)</br>
+<br>[2][sentence-transformers](https://github.com/UKPLab/sentence-transformers)</br>
+<br>[3][Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks](https://arxiv.org/abs/1908.10084)</br>
+
+## Copyright and License
+
+BEFAQ is provided under the [Apache-2.0 license](https://github.com/baidu/AnyQ/blob/master/LICENSE).
