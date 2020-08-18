@@ -8,7 +8,7 @@
 <br>（1）使用了Elasticsearch、Faiss、Annoy 作为召回引擎</br>
 <br>（2）使用了Sentence BERT 语意向量（Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks）</br>
 <br>（3）对同义问题有很好的支持</br>
-<br>（4）支持多领域语料（保证了召回的语料是对应领域的，即使是同样的问题，也可以得到不同的答案。）</br>
+<br>（4）支持多领域语料（保证了召回的数据是对应领域的，即使是同样的问题，也可以得到不同的答案。）</br>
 
 
 ## BEFAQ的框架结构如下图
