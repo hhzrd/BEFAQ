@@ -4,7 +4,7 @@
 LastEditors: xiaoyichao
 @Date: 2020-06-19 19:01:17
 LastEditTime: 2020-08-15 18:23:17
-@Description: 
+@Description: 删除索引
 '''
 
 from es_operate import ESCURD

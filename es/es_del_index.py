@@ -3,7 +3,7 @@
 @Author: xiaoyichao
 LastEditors: xiaoyichao
 @Date: 2020-01-02 16:55:23
-LastEditTime: 2020-08-15 16:01:10
+LastEditTime: 2020-08-21 17:49:09
 @Description: 删除ES的索引， del_index_name 是要删除的索引的名字
 
 '''
