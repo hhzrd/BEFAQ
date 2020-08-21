@@ -3,13 +3,14 @@
 @Author: xiaoyichao
 LastEditors: xiaoyichao
 @Date: 2020-05-12 20:46:56
-LastEditTime: 2020-08-15 15:54:06
+LastEditTime: 2020-08-21 16:51:20
 @Description: 
 '''
 import numpy as np
 import jieba
 from sklearn.metrics.pairwise import cosine_similarity
 import time
+import configparser
 from get_question_vecs import ReadVec2bin
 from sentence_transformers import SentenceTransformer
 import os
@@ -17,13 +18,17 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from bert_server.multi_bert_server import get_bert
 
-STB_path = "/data/xiaoyichao/model/STB/distiluse-base-multilingual-cased"
+dir_name = os.path.abspath(os.path.dirname(__file__))
 
+faq_config = configparser.ConfigParser()
+faq_config.read(os.path.join(dir_name, "../faq/befaq_conf.ini"))
+Sentence_BERT_path = os.path.join(dir_name, "../", str(
+    faq_config["AlgorithmConfiguration"]["Sentence_BERT_path"]))
 
 class Matching(object):
     def __init__(self):
         self.read_vec2bin = ReadVec2bin()
-        self.embedder = SentenceTransformer(STB_path)
+        self.embedder = SentenceTransformer(Sentence_BERT_path)
 
     def cosine_sim(self, orgin_query, retrieval_questions, owner_name):
         '''
@@ -74,7 +79,7 @@ class Matching(object):
             print('SKlearn:', end_time-begin_time)
             normalized_sim_list = []
             for sim in sim_list:
-                if sim > 1:  
+                if sim > 1:
                     sim = 1
                 normalized_sim_list.append(sim)
 
