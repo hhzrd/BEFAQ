@@ -19,7 +19,9 @@
 
 ### 1、安装Es7.6.1和配套的kibana，配置Es的IK分词器和同义词功能
 
-请参考博客[ES（Elasticsearch）7.6.1安装教程](https://blog.csdn.net/weixin_37792714/article/details/108025200)进行安装。如何已经配置过Es、IK分词器和同义词功能，可以略过这一步。但是记得把同义词同步到你的Es中。为了方便大家。相关文件的下载，都放在了百度网盘中，欢迎大家使用。链接:https://pan.baidu.com/s/1PxgINf6Q1UZBtcsYw6FU0w  密码:4q9h
+    请参考博客[ES（Elasticsearch）7.6.1安装教程](https://blog.csdn.net/weixin_37792714/article/details/108025200)进行安装。如何已经配置过Es、IK分词器和同义词功能，可以略过这一步。但是记得把同义词同步到你的Es中。为了方便大家。相关文件的下载，都放在了百度网盘中，欢迎大家使用。链接:https://pan.baidu.com/s/1PxgINf6Q1UZBtcsYw6FU0w  密码:4q9h
+
+    在BEFAQ中，为了方便大家的使用，我们提供两种Elasticsearch的连接方式：使用用户名和密码的方式与不使用用户名密码的方式。如何修改请参看项目根目录下的es/es.ini 配置文件中的说明。在我们的博客中，我们提供了Elasticsearch配置用户名和密码的方式。
 
 
 ### 2、下载项目代码并创建BEFAQ的虚拟环境

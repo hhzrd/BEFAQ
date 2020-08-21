@@ -4,7 +4,7 @@
 LastEditors: xiaoyichao
 @Date: 2020-06-19 19:01:17
 LastEditTime: 2020-08-15 18:23:17
-@Description: 
+@Description: 删除索引
 '''
 
 from es_operate import ESCURD
@@ -25,11 +25,17 @@ es_server_ip_port = es_config["ServerAddress"]["es_server_ip_port"]
 # 使用配置文件中的index_name，也可以自己命名，创建其他名称的索引
 index_name = es_config["ServerInfo"]["index_name_1"]
 
-http_auth_user_name = es_config["ServerAddress"]["http_auth_user_name"]
-http_auth_password = es_config["ServerAddress"]["http_auth_password"]
+if_es_use_passwd = es_config["ServerAddress"]["if_es_use_passwd"]
+if if_es_use_passwd == "1":
+    http_auth_user_name = es_config["ServerAddress"]["http_auth_user_name"]
+    http_auth_password = es_config["ServerAddress"]["http_auth_password"]
+    es_connect = Elasticsearch(
+        es_server_ip_port, http_auth=(http_auth_user_name, http_auth_password))
+else:
 
-es_connect = Elasticsearch(
-    es_server_ip_port, http_auth=(http_auth_user_name, http_auth_password))
+    es_connect = Elasticsearch(
+        es_server_ip_port)
+
 
 es_faq = ESCURD(es_connect)
 
