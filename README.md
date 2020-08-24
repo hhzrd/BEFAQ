@@ -150,9 +150,9 @@
 
 ## 参考文献：
 
-<br>[1][百度AnyQ](https://github.com/baidu/AnyQ)</br>
-<br>[2][sentence-transformers](https://github.com/UKPLab/sentence-transformers)</br>
-<br>[3][Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks](https://arxiv.org/abs/1908.10084)</br>
+<br>[1] [百度AnyQ](https://github.com/baidu/AnyQ)</br>
+<br>[2] [sentence-transformers](https://github.com/UKPLab/sentence-transformers)</br>
+<br>[3] [Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks](https://arxiv.org/abs/1908.10084)</br>
 
 ## Copyright and License
 
