@@ -3,7 +3,7 @@
 @Author: xiaoyichao
 LastEditors: xiaoyichao
 @Date: 2020-01-02 16:55:23
-LastEditTime: 2020-08-14 14:18:59
+LastEditTime: 2020-08-25 19:11:26
 @Description: 将问题的集合的向量写入bin文件
 
 '''
@@ -40,11 +40,9 @@ class WriteVec2bin(object):
         bert_sentences_path = os.path.join(
             dir_name, '../faq/bert_vect/%s_bert_sentences.txt' % (owner_name))
         orgin_query_vecs = np.zeros(shape=(1, 512))
-        num = 0
         with open(bert_sentences_path, "w") as f:
             f.write("数据库中的问题"+"\n")
             for info in self.excel_list[num]:
-                num += 1
                 original_question = info[1]
                 f.write(original_question+"\n")
                 orgin_query = original_question.replace("，", " ")
