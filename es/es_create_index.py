@@ -3,7 +3,7 @@
 @Author: xiaoyichao
 LastEditors: xiaoyichao
 @Date: 2020-01-02 16:55:23
-LastEditTime: 2020-08-25 17:51:50
+LastEditTime: 2020-08-25 18:05:28
 @Description: 创建一个索引，仅供测试。
 
 '''
@@ -35,6 +35,6 @@ else:
 
 es_faq = ESCURD(es_connect)
 
-if __name__ == "__main__":
-    es_faq.create_index(index_name=index_name_1)
-    # es_faq.create_index(index_name=index_name_2)
+# if __name__ == "__main__":
+#     es_faq.create_index(index_name=index_name_1)
+#     es_faq.create_index(index_name=index_name_2)

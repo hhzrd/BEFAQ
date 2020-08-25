@@ -45,6 +45,6 @@ else:
 
 es_faq = ESCURD(es_connect)
 
-if __name__ == "__main__":
-    es_faq.del_index(index_name=index_name_1)
-    es_faq.del_index(index_name=index_name_2)
+# if __name__ == "__main__":
+#     es_faq.del_index(index_name=index_name_1)
+#     es_faq.del_index(index_name=index_name_2)
