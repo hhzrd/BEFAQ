@@ -3,7 +3,7 @@
 @Author: xiaoyichao
 LastEditors: xiaoyichao
 @Date: 2020-06-19 19:01:17
-LastEditTime: 2020-08-25 17:52:03
+LastEditTime: 2020-08-25 18:03:58
 @Description: 删除索引，仅供测试。
 '''
 
@@ -39,7 +39,7 @@ else:
 
 es_faq = ESCURD(es_connect)
 
-if __name__ == "__main__":
-    owner_names = ["领域1,领域2,领域3"]
-    for owner_name in owner_names:
-        es_faq.del_data(index_name, owner_name)
+# if __name__ == "__main__":
+#     owner_names = ["领域1,领域2,领域3"]
+#     for owner_name in owner_names:
+#         es_faq.del_data(index_name, owner_name)
