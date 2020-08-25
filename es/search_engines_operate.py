@@ -3,7 +3,7 @@
 @Author: xiaoyichao
 LastEditors: xiaoyichao
 @Date: 2020-06-19 17:14:35
-LastEditTime: 2020-08-14 14:31:20
+LastEditTime: 2020-08-25 17:50:47
 @Description: 训练annoy文件，不用faiss 是因为faiss不支持float64，最大精度floa32. 
 也有利用annoy 检索的功能
 '''
@@ -60,8 +60,3 @@ class SearchEngine(object):
 
         faiss.write_index(index, faiss_index_path)
         print("写入  %s_faiss.index文件" % owner_name)
-
-
-search_engine = SearchEngine()
-search_engine.train_annoy(owner_name="领域1")
-search_engine.train_faiss(owner_name="领域1")

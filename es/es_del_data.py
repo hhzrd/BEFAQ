@@ -3,8 +3,8 @@
 @Author: xiaoyichao
 LastEditors: xiaoyichao
 @Date: 2020-06-19 19:01:17
-LastEditTime: 2020-08-15 18:23:17
-@Description: 删除索引
+LastEditTime: 2020-08-25 17:52:03
+@Description: 删除索引，仅供测试。
 '''
 
 from es_operate import ESCURD
