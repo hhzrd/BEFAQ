@@ -3,7 +3,7 @@
 @Author: xiaoyichao
 LastEditors: xiaoyichao
 @Date: 2020-06-19 17:14:35
-LastEditTime: 2020-08-13 21:31:07
+LastEditTime: 2020-08-25 18:05:41
 @Description: 
 '''
 from read_excel import ExcelData
