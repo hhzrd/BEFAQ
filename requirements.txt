@@ -7,3 +7,4 @@ numpy==1.18.2
 faiss_cpu==1.6.3
 sanic==20.6.3
 scikit_learn==0.23.2
+transformers==3.0.2
