@@ -35,7 +35,7 @@
 ### 3、sentence-transformers 多语言预训练模型的下载
 
     首先进入到项目的根目录，然后
-    cd data/model
+    cd model
     wget https://public.ukp.informatik.tu-darmstadt.de/reimers/sentence-transformers/v0.2/distiluse-base-multilingual-cased.zip
     unzip distiluse-base-multilingual-cased.zip
 
