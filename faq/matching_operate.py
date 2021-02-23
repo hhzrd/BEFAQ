@@ -3,20 +3,25 @@
 @Author: xiaoyichao
 LastEditors: xiaoyichao
 @Date: 2020-05-12 20:46:56
-LastEditTime: 2020-08-21 16:51:20
+LastEditTime: 2021-02-23 17:47:30
 @Description: 
 '''
 import numpy as np
 import jieba
-from sklearn.metrics.pairwise import cosine_similarity
+import math
+import Levenshtein
 import time
 import configparser
+
+from sklearn.metrics.pairwise import cosine_similarity
+from gensim.summarization import bm25
 from get_question_vecs import ReadVec2bin
 from sentence_transformers import SentenceTransformer
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from bert_server.multi_bert_server import get_bert
+from faq.jieba4befaq import JiebaBEFAQ
 
 dir_name = os.path.abspath(os.path.dirname(__file__))
 
@@ -29,6 +34,7 @@ class Matching(object):
     def __init__(self):
         self.read_vec2bin = ReadVec2bin()
         self.embedder = SentenceTransformer(Sentence_BERT_path)
+        self.jiebaBEFAQ = JiebaBEFAQ()
 
     def cosine_sim(self, orgin_query, retrieval_questions, owner_name):
         '''
@@ -118,4 +124,42 @@ class Matching(object):
             jaccard_coefficient = self.jaccrad(
                 question=orgin_query, reference=retrieval_question)
             sim_list.append(jaccard_coefficient)
+        return sim_list
+
+    def bm25_sim(self, orgin_query, retrieval_questions):
+        '''
+        @Author: xiaoyichao
+        @param {type}
+        @Description: 计算query 和潜在问题的BM25相似度
+        '''
+        jieba_corpus = []
+        for corpu in retrieval_questions:
+            line_seg = self.jiebaBEFAQ.get_list(corpu)
+            jieba_corpus.append(line_seg)
+        jieba_question = self.jiebaBEFAQ.get_list(orgin_query)
+        bm25Model = bm25.BM25(jieba_corpus)
+        sim_list = bm25Model.get_scores(jieba_question)
+        normalized_sim_list = []
+        max_sim = max(sim_list)
+        for sim in sim_list:
+            if sim == 0:
+                normalized_sim = 0
+            else:
+                normalized_sim = sim/max_sim
+            normalized_sim_list.append(normalized_sim)
+
+        return normalized_sim_list
+
+    def edit_distance_sim(self, orgin_query, retrieval_questions):
+        '''
+        @Author: xiaoyichao
+        @param {type}
+        @Description: 计算query 和潜在问题的编辑距离的相似度
+        '''
+        sim_list = []
+        max_len = max(len(orgin_query), max([len(x) for x in retrieval_questions]))
+        for corpu in retrieval_questions:
+            edit_distance = Levenshtein.distance(orgin_query, corpu)
+            sim = 1 - edit_distance * 1.0 / max_len
+            sim_list.append(sim)
         return sim_list

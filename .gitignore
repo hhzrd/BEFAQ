@@ -6,3 +6,5 @@ nohup.out
 *.m
 log*.*
 model
+search_model
+bert_vect

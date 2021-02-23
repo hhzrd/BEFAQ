@@ -15,7 +15,7 @@ from get_final_data import FinalData
 from sanic import Sanic
 from sanic.response import json
 from sanic import response
-from jieba_befaq_search import StopwordsBEFAQSearch
+from jieba4befaq import JiebaBEFAQ
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -29,6 +29,8 @@ faq_config = configparser.ConfigParser()
 faq_config.read(os.path.join(dir_name, "befaq_conf.ini"))
 consine_weight = float(faq_config["AlgorithmConfiguration"]["consine"])
 jaccard_weight = float(faq_config["AlgorithmConfiguration"]["jaccard"])
+BM25_weight = float(faq_config["AlgorithmConfiguration"]["BM25"])
+edit_distance_weight = float(faq_config["AlgorithmConfiguration"]["edit_distance"])
 use_faiss = int(faq_config["AlgorithmConfiguration"]["use_faiss"])
 use_annoy = int(faq_config["AlgorithmConfiguration"]["use_annoy"])
 engine_num = int(faq_config["Faiss_Annoy_Configuration"]["engine_num"])
@@ -51,7 +53,7 @@ def kill_port(port):
         print("%d端口程序kill 失败" % port)
 
 
-stopwords4BEFAQ_before_search = StopwordsBEFAQSearch()
+jiebaBEFAQ = JiebaBEFAQ()
 search_data = SearchData()
 match_ing = Matching()
 rerank = ReRank()
@@ -68,11 +70,9 @@ async def myfaq(request):
     owner_name = str(request.form.get("owner_name"))
     get_num = int(request.form.get("get_num", default=3))
     threshold = float(request.form.get("threshold", default=0.5))
-    
-
 
     # 给ES使用的结巴分词
-    process_query = stopwords4BEFAQ_before_search.seg_sentence(
+    process_query = jiebaBEFAQ.seg_sentence(
         sentence=orgin_query)
     print("process_query", process_query)
     query_terms = jieba.cut(process_query)
@@ -96,38 +96,38 @@ async def myfaq(request):
     print(maybe_original_questions)
 
     if len(retrieval_q_ids) > 0:  # ES（或faiss 或 annoy ）中检索到了数据
-        begin_time = time.time()
-
         # cosine_sim的retrieval_questions使用的maybe_original_questions，orgin_query使用的没有处理过的query
-
         consin_sim = match_ing.cosine_sim(
             orgin_query=orgin_query, retrieval_questions=maybe_original_questions, owner_name=owner_name)
         print_usetime(query=orgin_query, module="Matching cosine_sim")
-
         print("consin_sim:", consin_sim)
 
         # jaccard_sim的retrieval_questions使用的maybe_process_questions,orgin_query使用的是去掉停用词的query
         jaccard_sim = match_ing.jaccard_sim(
             orgin_query=process_query, retrieval_questions=maybe_process_questions)
-
         print("jaccard_sim:", jaccard_sim)
 
-        begin_time = time.time()
+        bm25_sim = match_ing.bm25_sim(
+            orgin_query=process_query, retrieval_questions=maybe_process_questions)
+        print("bm25_sim:", bm25_sim)
+
+        edit_distance_sim = match_ing.edit_distance_sim(
+            orgin_query=process_query, retrieval_questions=maybe_process_questions)
+        print("edit_distance_sim:", edit_distance_sim)
 
         re_rank_sim = rerank.linear_model(
-            consin_sim=consin_sim, jaccard_sim=jaccard_sim,  consine_weight=consine_weight, jaccard_weight=jaccard_weight)
+            consin_sim=consin_sim, jaccard_sim=jaccard_sim, bm25_sim=bm25_sim, edit_distance_sim=edit_distance_sim,
+            consine_weight=consine_weight, jaccard_weight=jaccard_weight, BM25_weight=BM25_weight, edit_distance_weight=edit_distance_weight)
 
-        print(retrieval_q_ids)
-        print(maybe_original_questions)
-        print(maybe_process_questions)
+        print("retrieval_q_ids:", retrieval_q_ids)
+        print("maybe_original_questions:", maybe_original_questions)
+        print("maybe_process_questions:", maybe_process_questions)
         print("re_rank_sim:", re_rank_sim)
-
-        begin_time = time.time()
 
         high_confidence_q_id_pos = deduplicate_threshold.dedu_thr(
             q_ids=retrieval_q_ids, re_rank_sim_list=re_rank_sim, threshold=threshold)
         print_usetime(query=orgin_query, module="Deduplicate and Threshold")
-        print("high_confidence_q_id_pos", high_confidence_q_id_pos)
+        print("high_confidence_q_id_pos:", high_confidence_q_id_pos)
 
         begin_time = time.time()
 
