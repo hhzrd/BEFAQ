@@ -3,7 +3,7 @@
 @Author: xiaoyichao
 LastEditors: xiaoyichao
 @Date: 2020-01-02 16:55:23
-LastEditTime: 2020-08-15 16:01:35
+LastEditTime: 2021-03-01 19:13:26
 @Description: 将数据写到ES中
 
 '''
@@ -57,6 +57,7 @@ class ReadsSqlData2ES(object):
         for sheet_data in self.excel_list:
             actions = []
             num = 0
+            owner_name = "未命名领域"
             for info in sheet_data:
                 num += 1
                 q_id, original_question, answer, id, owner_name = info[
@@ -78,8 +79,7 @@ class ReadsSqlData2ES(object):
                     "owner_name": owner_name
                 }
                 actions.append(action_name)
-            es_faq.insert_more(index_name=index_name,
-                               actions=actions, owner_name=owner_name)
+            es_faq.insert_more(index_name=index_name, actions=actions, owner_name=owner_name)
 
 
 if __name__ == "__main__":

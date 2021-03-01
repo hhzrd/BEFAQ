@@ -85,7 +85,7 @@
     启动BEFAQ服务 （如果数据没有发生变化，后期启动服务只需要进行这一步）
     python main_faq.py
     或者在后台中启动
-    nohup python -u main_faq.py > "logs/log$(date +"%Y-%m-%d-%H").txt" 2>&1
+    nohup python -u main_faq.py > "logs/log$(date +"%Y-%m-%d-%H").txt" 2>&1 &
     
 
     在终端中测试BEFAQ。BEFAQ的服务是post请求。(将xxx.xx.xx.xx替换成自己的ip)
