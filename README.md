@@ -18,7 +18,10 @@
 ## 如何使用
 
 ### 1、安装Es7.6.1和配套的kibana，配置Es的IK分词器和同义词功能
+### 1.1、使用docker(其中已经安装Es7.6.1、kibana、IK分词器和同义词功能)
+通过docker的方式来使用ES，IK分词器的自定义词典和同义词功能需要用户进入到docker中来自行添加字典和同义词。
 
+#### 1.2、在本机安装Es7.6.1和配套的kibana，配置Es的IK分词器和同义词功能
 请参考博客[ES（Elasticsearch）7.6.1安装教程](https://blog.csdn.net/weixin_37792714/article/details/108025200)进行安装。如何已经配置过Es、IK分词器和同义词功能，可以略过这一步。但是记得把同义词同步到你的Es中。为了方便大家。相关文件的下载，都放在了百度网盘中，欢迎大家使用。链接:https://pan.baidu.com/s/1PxgINf6Q1UZBtcsYw6FU0w  密码:4q9h
 
 在BEFAQ中，为了方便大家的使用，我们提供两种Elasticsearch的连接方式：使用用户名和密码的方式与不使用用户名密码的方式。如何修改请参看项目根目录下的es/es.ini 配置文件中的说明。在我们的博客中，我们提供了Elasticsearch配置用户名和密码的方式。
@@ -76,22 +79,25 @@
     训练Faiss和Annoy模型
     python train_search_model.py
 
-    进入项目的根目录(cd  ..)，然后
+    进入项目的根目录(cd ..)，然后
     cd faq
 
     启动BEFAQ服务 （如果数据没有发生变化，后期启动服务只需要进行这一步）
-    python main_faq.py 
+    python main_faq.py
+    或者在后台中启动
+    nohup python -u main_faq.py > "logs/log$(date +"%Y-%m-%d-%H").txt" 2>&1
+    
 
     在终端中测试BEFAQ。BEFAQ的服务是post请求。(将xxx.xx.xx.xx替换成自己的ip)
     
-    curl -d "question=忘记原始密码怎么修改密码&get_num=3&threshold=0.5&owner_name=领域1"   http://xxx.xx.xx.xx:8129/BEFAQ
+    curl -d "question=忘记原始密码怎么修改密码&get_num=3&threshold=0.5&owner_name=领域3"   http://xxx.xx.xx.xx:8129/BEFAQ
     
     接口url:
     http://xxx.xx.xx.xx:8129/BEFAQ
     接口参数说明
     question：用户的问题。必需
     get_num：接口最多返回几条数据。非必需，默认为3
-    threshold：阈值，相似度高于这个阈值的数据才会被接口返回。非必需，默认为0.5
+    threshold：阈值，相似度高于或等于这个阈值的数据才会被接口返回。非必需，默认为0.5
     owner_name：数据所有者的名称，也就是excel中每个领域的数据对应的sheet name。用来区分多领域数据。必需
     
     返回的数据格式：
@@ -104,8 +110,6 @@
             "confidence": 0.99
         }
     ]
-
-
 
 
 ### 7、如何开启BEFAQ 的联想词接口服务
