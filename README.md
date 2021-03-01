@@ -26,7 +26,7 @@
 
 ### 2、下载项目代码并创建BEFAQ的虚拟环境
 
-    conda create -n befaq python=3.6 
+    conda create -n befaq python=3.6 -y
     source activate befaq
     git clone https://github.com/hhzrd/BEFAQ.git
     进入BEFAQ的根目录，然后
