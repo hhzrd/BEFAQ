@@ -3,7 +3,7 @@
 Author: xiaoyichao
 LastEditors: xiaoyichao
 Date: 2020-08-13 11:34:47
-LastEditTime: 2020-08-17 14:37:45
+LastEditTime: 2021-03-02 14:28:15
 Description: 用于读取excel表格的类
 '''
 import os
@@ -42,8 +42,8 @@ class ExcelData(object):
         Description: 读取excel中某个sheet的数据
         '''
         try:
-            data = xlrd.open_workbook(filename=self.excel_file)
-            table = data.sheet_by_name(sheet_name)
+            book = xlrd.open_workbook(filename=self.excel_file)
+            table = book.sheet_by_name(sheet_name)
             nrows = table.nrows
             ncols = table.ncols
             sheet_list = []
@@ -66,7 +66,7 @@ class ExcelData(object):
     def read_QA_data(self):
         '''
         Author: xiaoyichao
-        param {type} 
+        param {type}
         Description: 读取excel中的问答数据
         '''
         excel_list = []
