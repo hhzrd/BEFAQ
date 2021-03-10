@@ -1,0 +1,40 @@
+version: '3.1'
+services:
+    kibana:
+        image: xiaoyichao1993/kibana-7.6.1:v1.2
+        container_name: kibana4befaq
+        links:
+            - elasticsearch4befaq
+        ports:
+            - 5601:5601
+
+    elasticsearch4befaq:
+        image: xiaoyichao1993/es7-befaq:v3.4.3
+        container_name: es4befaq
+        cap_add:
+            - IPC_LOCK
+        volumes:
+            - esdata1:/usr/share/elasticsearch/data
+        ports:
+            - 9200:9200
+        environment:
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+            - cluster.name=befaq-es
+            - bootstrap.memory_lock=true
+            - discovery.type=single-node
+
+    befaq:
+        image: xiaoyichao1993/befaq:v0.2
+        container_name: befaq
+        links:
+            - elasticsearch4befaq
+        ports:
+            - 8129:8129
+        stdin_open: true
+        tty: true
+        depends_on:
+            - elasticsearch4befaq
+
+volumes:
+  esdata1:
+    driver: local

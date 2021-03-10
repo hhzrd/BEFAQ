@@ -9,3 +9,5 @@ sanic==20.6.3
 scikit_learn==0.23.2
 transformers==3.0.2
 python-Levenshtein==0.12.2
+gensim==3.8.3
+uvloop==0.14.0 
