@@ -9,6 +9,7 @@
 <br>（2）使用了Sentence BERT 语义向量（Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks）</br>
 <br>（3）对同义问题有很好的支持</br>
 <br>（4）支持多领域语料（保证了召回的数据是对应领域的，即使是同样的问题，也可以得到不同的答案。）</br>
+<br>（5）提供了根据当前输入提示联想问题（suggest）功能的接口</br>
 
 
 ## BEFAQ的框架结构如下图
@@ -108,7 +109,7 @@
 
 
 
-### 7、如何开启BEFAQ 的联想词接口服务
+### 7、如何开启BEFAQ的联想问题（suggest）接口服务
 
     如果想要启动根据当前输入联想问题的功能。
     进入项目根目录，然后
