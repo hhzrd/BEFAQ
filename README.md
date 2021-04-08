@@ -1,6 +1,6 @@
 # BEFAQ
 
-**BEFAQ(BERT Embedding FAQ)** 开源项目是好好住面向多领域FAQ集合的问答系统框架。</br>
+**BEFAQ(BERT Embedding Frequently Asked Question)** 开源项目是好好住面向多领域FAQ集合的问答系统框架。</br>
 <br>我们将Sentence BERT模型应用到FAQ问答系统中。开发者可以使用BEFAQ系统快速构建和定制适用于特定业务场景的FAQ问答系统。</br>
 
 ## BEFAQ的优点有：
